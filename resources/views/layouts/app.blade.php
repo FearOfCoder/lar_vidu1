@@ -96,6 +96,24 @@
       display:flex; flex-direction:column; gap:10px; min-height: 220px; box-shadow: var(--shadow-1);
       transition: transform .18s ease, box-shadow .18s ease;
     }
+    /* Ảnh sản phẩm: cùng tỉ lệ, không lệch */
+.product .thumb{
+  margin:0 0 12px 0;      /* bỏ margin mặc định của <figure> */
+  width:100%;
+  aspect-ratio: 4 / 3;    /* đổi 1/1 nếu muốn ô vuông */
+  border-radius:12px;
+  overflow:hidden;
+  background:#f6f8fc;
+  border:1px solid var(--line);
+}
+.product .thumb img{
+  display:block;          /* tránh khoảng trắng dưới ảnh */
+  width:100%;
+  height:100%;
+  object-fit:cover;       /* cắt vừa khung, không méo */
+  object-position:center; /* căn giữa ảnh */
+}
+
     .product:hover{ box-shadow: var(--shadow-2); transform: translateY(-2px) }
     .chip{ padding:6px 10px; border-radius:999px; background: color-mix(in oklab, var(--brand) 8%, var(--card)); color: color-mix(in oklab, var(--brand) 65%, black); font-weight:700; font-size:13px; border:1px solid color-mix(in oklab, var(--brand) 30%, var(--line)) }
     .price{ font-weight:800; color: var(--brand); letter-spacing:.3px }
@@ -155,7 +173,7 @@
       @else
         <a href="{{ route('login') }}" class="btn btn-ghost"><i class="ri-user-3-line"></i> Đăng nhập</a>
         <a href="{{ route('register.show') }}" class="btn btn-brand"><i class="ri-edit-2-line"></i> Đăng ký</a>
-      @endauth>
+      @endauth
 
       {{-- Theme toggle --}}
       <button class="btn btn-ghost" id="themeToggle" title="Đổi giao diện" aria-label="Đổi giao diện">

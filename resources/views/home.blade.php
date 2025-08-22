@@ -3,6 +3,25 @@
 @section('title','Trang chủ')
 
 @section('content')
+  {{-- CSS nhỏ giúp ảnh luôn đẹp, không vỡ layout --}}
+  <style>
+    .product .thumb{
+      width:100%;
+      aspect-ratio:4/3;              /* đổi 1/1 nếu muốn vuông */
+      overflow:hidden;
+      border-radius:12px;
+      background:#f6f8fc;
+      margin-bottom:10px;
+      border:1px solid #eef1f6;
+    }
+    .product .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+  </style>
+
   @auth
     @if(auth()->user()->role === 'admin')
       {{-- ADMIN DASHBOARD --}}
@@ -50,6 +69,13 @@
             <div class="grid">
               @foreach($recentProducts as $p)
                 <article class="product">
+                  {{-- Ảnh --}}
+                  <figure class="thumb">
+                    <img
+                      src="{{ $p->image_url ?? ($p->image ? asset('storage/'.$p->image) : asset('images/placeholder.png')) }}"
+                      alt="{{ $p->name }}">
+                  </figure>
+
                   <div class="row">
                     <span class="chip">{{ $p->category->name ?? '—' }}</span>
                     <span class="right price">{{ number_format($p->price,0,',','.') }} đ</span>
@@ -86,6 +112,13 @@
         <div class="grid">
           @foreach($products as $p)
             <article class="product">
+              {{-- Ảnh --}}
+              <figure class="thumb">
+                <img
+                  src="{{ $p->image_url ?? ($p->image ? asset('storage/'.$p->image) : asset('images/placeholder.png')) }}"
+                  alt="{{ $p->name }}">
+              </figure>
+
               <div class="row">
                 <span class="chip">{{ $p->category->name ?? 'Danh mục' }}</span>
                 <span class="right price">{{ number_format($p->price,0,',','.') }} đ</span>
@@ -123,6 +156,13 @@
       <div class="grid">
         @foreach($products as $p)
           <article class="product">
+            {{-- Ảnh --}}
+            <figure class="thumb">
+              <img
+                src="{{ $p->image_url ?? ($p->image ? asset('storage/'.$p->image) : asset('images/placeholder.png')) }}"
+                alt="{{ $p->name }}">
+            </figure>
+
             <div class="row">
               <span class="chip">{{ $p->category->name ?? 'Danh mục' }}</span>
               <span class="right price">{{ number_format($p->price,0,',','.') }} đ</span>

@@ -11,22 +11,26 @@ class AuthController extends Controller
 {
     public function showRegister() { return view('auth.register'); }
 
-    public function register(Request $request) {
-        $data = $request->validate([
-            'name'                  => ['required','string','max:255'],
-            'email'                 => ['required','email','max:255','unique:users,email'],
-            'password'              => ['required','string','min:6','confirmed'],
-        ]);
+  public function register(Request $request) {
+    $data = $request->validate([
+        'name'                  => ['required','string','max:255'],
+        'email'                 => ['required','email','max:255','unique:users,email'],
+        'password'              => ['required','string','min:6','confirmed'],
+    ]);
 
-        User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role'     => 'customer',
-        ]);
+    // Tạo user mới
+    $user = User::create([
+        'name'     => $data['name'],
+        'email'    => $data['email'],
+        'password' => Hash::make($data['password']),
+        'role'     => 'customer',
+    ]);
 
-        return redirect('/login')->with('success','Đăng ký thành công! Mời đăng nhập.');
-    }
+    // Gửi email xác thực
+    $user->sendEmailVerificationNotification();
+
+    return redirect('/login')->with('success','Đăng ký thành công! Mời kiểm tra email để xác thực.');
+}
 
     public function showLogin() { return view('auth.login'); }
 

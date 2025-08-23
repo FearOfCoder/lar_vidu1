@@ -153,7 +153,7 @@
 
 <header class="nav" id="topbar">
   <div class="nav-inner">
-    <a class="brand" href="{{ url('/') }}"><i class="ri-sparkling-2-fill"></i><span>Comestics Alley</span></a>
+    <a class="brand" href="{{ url('/') }}"><i class="ri-sparkling-2-fill"></i><span>Mỹ Phẩm Anh Độ</span></a>
 
     <nav class="nav-links">
       <a href="{{ route('products.index') }}"
@@ -189,7 +189,7 @@
 
 <footer>
   <div class="wrap">
-    <span>© {{ date('Y') }} Comestics Alley</span>
+    <span>© {{ date('Y') }} Mỹ phẩmm Anh Độ</span>
     <span class="muted">Crafted with ♥ • Indigo × Teal</span>
   </div>
 </footer>

@@ -17,7 +17,7 @@
   <div class="card card-pad">
     <div class="auth-head">
       <div class="title">Tạo tài khoản ✨</div>
-      <div class="auth-sub">Gia nhập Comestics Alley để trải nghiệm tốt hơn</div>
+      <div class="auth-sub">Gia nhập Mỹ phẩm Anh Độ để trải nghiệm tốt hơn</div>
     </div>
 
     {{-- Tóm tắt lỗi --}}

@@ -34,25 +34,55 @@ class AuthController extends Controller
 
     public function showLogin() { return view('auth.login'); }
 
-    public function login(Request $request) {
-        // 1) validate input
-        $request->validate([
-            'email'    => ['required','email'],
-            'password' => ['required','string'],
-        ]);
+  public function login(Request $request) {
+    $request->validate([
+        'email'    => ['required','email'],
+        'password' => ['required','string'],
+    ]);
 
-        // 2) attempt login
-        $remember = $request->boolean('remember');
-        if (Auth::attempt($request->only('email','password'), $remember)) {
+    $remember = $request->boolean('remember');
+
+    if (Auth::attempt($request->only('email','password'), $remember)) {
         $request->session()->regenerate();
-        // ⬇️ sau khi login -> về trang chủ
-        return redirect('/')->with('success', 'Đăng nhập thành công!');
+
+        if (! $request->user()->hasVerifiedEmail()) {
+            // (tuỳ chọn) gửi lại link mỗi lần họ đăng nhập mà chưa verify
+            $request->user()->sendEmailVerificationNotification();
+
+            return redirect()->route('verification.notice')
+                ->with('error','Vui lòng xác thực email. Link đã được gửi vào Mailtrap.');
+        }
+
+        return redirect()->intended('/')->with('success','Đăng nhập thành công!');
     }
-        // 3) trả lỗi + giữ lại email
-        return back()
-            ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])
-            ->withInput($request->only('email'));
+
+    return back()
+        ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])
+        ->withInput($request->only('email'));
+}
+public function verifyEmail(Request $request, $id, $hash)
+{
+    $user = \App\Models\User::findOrFail($id);
+
+    // Kiểm tra chữ ký email trong link
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        abort(403, 'Link xác thực không hợp lệ.');
     }
+
+    // Đánh dấu đã xác thực (nếu chưa)
+    if (! $user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+    }
+
+    // TỰ ĐỘNG ĐĂNG NHẬP user (kể cả trước đó chưa login)
+    Auth::login($user);
+
+    // Về trang chủ (hoặc intended)
+    return redirect()->intended(route('home'))
+        ->with('success', 'Email đã được xác thực! Chào mừng bạn.');
+}
+
 
     public function logout(Request $request) {
         Auth::logout();
